@@ -14,12 +14,17 @@ services:
       - STABLE_EXTENSIONS=wps,csw
       - EXTRA_JAVA_OPTS=-Xms1G -Xmx2G
       - POSTGRES_JNDI_ENABLED=true
-      - POSTGRES_HOST=postgis
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=geoserver
-      - POSTGRES_USERNAME=geoserver
-      - POSTGRES_PASSWORD=geoserver
       - POSTGRES_JNDI_RESOURCE_NAME=jdbc/postgres
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USERNAME=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGIS_PORT=${POSTGIS_PORT}
+      - HTTPS_ENABLED=${HTTPS_ENABLED}
+      # - HTTPS_KEYSTORE_FILE=${HTTPS_KEYSTORE_FILE}
+      - HTTPS_KEYSTORE_PASSWORD=${HTTPS_KEYSTORE_PASSWORD}
+      - HTTPS_KEY_ALIAS=${HTTPS_KEY_ALIAS}
     volumes:
       - ./geoserver_data:/opt/geoserver_data/:Z
       - ./additional_libs:/opt/additional_libs:Z
@@ -34,12 +39,12 @@ services:
     ports:
       - "${POSTGIS_PORT}:5432"
     environment:
-      POSTGRES_USER: geoserver
-      POSTGRES_PASSWORD: geoserver
+      - POSTGRES_USERNAME=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - ./postgis/postgresql_data:/var/lib/postgresql/data:Z
     healthcheck:
-      test: pg_isready -U geoserver -h localhost -t 5 || exit 1
+      test: pg_isready -U ${POSTGRES_USERNAME} -h localhost -t 5 || exit 1
       interval: 10s
       retries: 5
       timeout: 10s
