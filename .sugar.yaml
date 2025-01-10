@@ -1,0 +1,16 @@
+compose-app: docker-compose
+env-file: .env
+defaults:
+  group: dev
+
+groups:
+  dev:
+    project-name: geoserver
+    compose-path:
+      - compose.yaml
+    env-file: .env
+    services:
+      default: geoserver,postgis
+      available:
+        - name: geoserver
+        - name: postgis

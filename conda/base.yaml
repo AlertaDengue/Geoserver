@@ -1,0 +1,8 @@
+name: geoserver
+channels:
+  - nodefaults
+  - conda-forge
+dependencies:
+  - python >=3.9,<3.12
+  - docker-compose
+  - containers-sugar < 1.14
