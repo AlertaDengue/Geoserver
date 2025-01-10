@@ -18,12 +18,11 @@ services:
       - EXTRA_JAVA_OPTS=-Xms1G -Xmx2G
       - POSTGRES_JNDI_ENABLED=true
       - POSTGRES_JNDI_RESOURCE_NAME=jdbc/postgres
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USERNAME=${POSTGRES_USERNAME}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGIS_PORT=${POSTGIS_PORT}
+      - POSTGRES_HOST=postgis
+      - POSTGRES_PORT=${POSTGIS_PORT}
+      - POSTGRES_DB=geoserver
+      - POSTGRES_USERNAME=geoserver
+      - POSTGRES_PASSWORD=geoserver
       - HTTPS_ENABLED=${HTTPS_ENABLED}
       # - HTTPS_KEYSTORE_FILE=${HTTPS_KEYSTORE_FILE}
       - HTTPS_KEYSTORE_PASSWORD=${HTTPS_KEYSTORE_PASSWORD}
@@ -40,14 +39,16 @@ services:
   postgis:
     image: postgis/postgis:17-3.4-alpine@sha256:5a1dbedac34e0e6663f8b7190d393339571f1cb3ecb2ab2f724524b4f3c7956e
     ports:
-      - "${POSTGIS_PORT}:5432"
+      - "${POSTGIS_PORT}:${POSTGIS_PORT}"
     environment:
-      - POSTGRES_USERNAME=${POSTGRES_USERNAME}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USERNAME=geoserver
+      - POSTGRES_PASSWORD=geoserver
+      - POSTGRES_DB=geoserver
+      - POSTGRES_PORT=${POSTGRES_PORT}
     volumes:
       - ./postgis/postgresql_data:/var/lib/postgresql/data:Z
     healthcheck:
-      test: pg_isready -U ${POSTGRES_USERNAME} -h localhost -t 5 || exit 1
+      test: pg_isready -U geoserver -h localhost -p ${POSTGIS_PORT} -t 5 || exit 1
       interval: 10s
       retries: 5
       timeout: 10s
