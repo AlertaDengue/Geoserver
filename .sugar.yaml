@@ -1,13 +1,26 @@
 compose-app: docker-compose
 env-file: .env
 defaults:
-  group: dev
+  group: {{ env.ENV }}
 
 groups:
   dev:
     project-name: geoserver
     compose-path:
       - compose.yaml
+      - compose-dev.yaml
+    env-file: .env
+    services:
+      default: geoserver,postgis
+      available:
+        - name: geoserver
+        - name: postgis
+
+  prod:
+    project-name: geoserver
+    compose-path:
+      - compose.yaml
+      - compose-prod.yaml
     env-file: .env
     services:
       default: geoserver,postgis

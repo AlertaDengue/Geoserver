@@ -1,0 +1,13 @@
+version: '3'
+services:
+  geoserver:
+    networks:
+        - infodengue-dev_infodengue
+
+  postgis:
+    networks:
+        - infodengue-dev_infodengue
+
+networks:
+  infodengue-dev_infodengue:
+    external: true
